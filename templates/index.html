@@ -56,8 +56,14 @@
             <td style="padding: 6px; font-weight: bold; border-bottom: 1px solid #eee;">Bob:</td>
             <td style="padding: 6px; border-bottom: 1px solid #eee;">{{ f.bob or '-' }}</td>
           </tr>
+          {% if f.tipo_bobinador %}
           <tr>
-            <td style="padding: 6px; font-weight: bold;">Tensión Bob gra:</td>
+            <td style="padding: 6px; font-weight: bold; border-bottom: 1px solid #eee;">Bobinador:</td>
+            <td style="padding: 6px; border-bottom: 1px solid #eee;">{{ f.tipo_bobinador }}</td>
+          </tr>
+          {% endif %}
+          <tr>
+            <td style="padding: 6px; font-weight: bold;">Tensión:</td>
             <td style="padding: 6px;">{{ f.tension_bob_gra or '-' }}</td>
           </tr>
         </table>
@@ -68,4 +74,5 @@
   {% endif %}
 {% endif %}
 {% endblock %}
+
 

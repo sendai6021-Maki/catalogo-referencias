@@ -11,7 +11,6 @@ app.secret_key = os.environ.get("SECRET_KEY", "Cats")
 ADMIN_USER = os.environ.get("ADMIN_USER", "Sendai6021")
 ADMIN_PASS_HASH = generate_password_hash(os.environ.get("ADMIN_PASS", "Haru&Maki1302"))
 
-# Manejo de compatibilidad de URL para PostgreSQL en Render
 db_url = os.environ.get("DATABASE_URL", "sqlite:///referencias.db")
 if db_url.startswith("postgres://"):
     db_url = db_url.replace("postgres://", "postgresql+psycopg://", 1)
@@ -36,7 +35,8 @@ class Ficha(db.Model):
     alimentacion = db.Column(db.String(100), default="")
     transmision = db.Column(db.String(100), default="")
     bob = db.Column(db.String(100), default="")
-    tension_bob_gra = db.Column(db.String(50), default="")
+    tipo_bobinador = db.Column(db.String(50), default="")  # Bobinador grande / Bobinador pequeño
+    tension_bob_gra = db.Column(db.String(50), default="")  # Valor de Tensión
     nota_variante = db.Column(db.String(150), default="")
 
     def to_dict(self):
@@ -52,16 +52,17 @@ class Ficha(db.Model):
             "alimentacion": self.alimentacion or "",
             "transmision": self.transmision or "",
             "bob": self.bob or "",
+            "tipo_bobinador": self.tipo_bobinador or "",
             "tension_bob_gra": self.tension_bob_gra or "",
             "nota_variante": self.nota_variante or ""
         }
 
 with app.app_context():
     db.create_all()
-    # Migración automática si la tabla ya existía sin la columna 'tex'
     try:
         with db.engine.connect() as conn:
             conn.execute(text("ALTER TABLE fichas ADD COLUMN IF NOT EXISTS tex VARCHAR(100);"))
+            conn.execute(text("ALTER TABLE fichas ADD COLUMN IF NOT EXISTS tipo_bobinador VARCHAR(50);"))
             conn.commit()
     except Exception as e:
         print("Aviso al verificar columnas:", e)
@@ -118,6 +119,7 @@ def admin():
                 ficha.alimentacion = request.form.get("alimentacion", "")
                 ficha.transmision = request.form.get("transmision", "")
                 ficha.bob = request.form.get("bob", "")
+                ficha.tipo_bobinador = request.form.get("tipo_bobinador", "")
                 ficha.tension_bob_gra = request.form.get("tension_bob_gra", "")
                 ficha.nota_variante = request.form.get("nota_variante", "")
         else:
@@ -132,6 +134,7 @@ def admin():
                 alimentacion=request.form.get("alimentacion", ""),
                 transmision=request.form.get("transmision", ""),
                 bob=request.form.get("bob", ""),
+                tipo_bobinador=request.form.get("tipo_bobinador", ""),
                 tension_bob_gra=request.form.get("tension_bob_gra", ""),
                 nota_variante=request.form.get("nota_variante", "")
             )
@@ -154,6 +157,7 @@ def eliminar(id):
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)
+
 
 
 

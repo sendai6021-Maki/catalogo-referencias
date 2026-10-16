@@ -49,10 +49,18 @@
       <label>Bob</label>
       <input type="text" name="bob" id="form-bob" placeholder="63.0 - 1.7647 - 111.18">
     </div>
+    <div>
+      <label>Tipo de Bobinador</label>
+      <select name="tipo_bobinador" id="form-tipo-bob" style="width: 100%; padding: 8px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; background: #fff;">
+        <option value="">-- Seleccionar --</option>
+        <option value="Bobinador grande">Bobinador grande</option>
+        <option value="Bobinador pequeño">Bobinador pequeño</option>
+      </select>
+    </div>
   </div>
 
-  <label>Tensión Bob gra</label>
-  <input type="text" name="tension_bob_gra" id="form-tension" placeholder="35/20">
+  <label>Tensión</label>
+  <input type="text" name="tension_bob_gra" id="form-tension" placeholder="Ej: 35/20">
 
   <button type="submit" id="btn-save">Guardar Ficha</button>
   <button type="button" onclick="limpiarFormulario()" style="background: #6c757d;">Limpiar / Nueva</button>
@@ -62,7 +70,11 @@
 {% for f in fichas %}
   <div class="card">
     <strong>{{ f.referencia }}</strong> {% if f.nota_variante %}- <em>{{ f.nota_variante }}</em>{% endif %}
-    <p style="font-size: 0.85rem; margin: 5px 0;">RPM: {{ f.rpm }} | Batán: {{ f.batan }} | Tex: {{ f.tex }} | Aro: {{ f.aro }}</p>
+    <p style="font-size: 0.85rem; margin: 5px 0;">
+      RPM: {{ f.rpm }} | Batán: {{ f.batan }} | Tex: {{ f.tex }} | Aro: {{ f.aro }} 
+      {% if f.tipo_bobinador %}| {{ f.tipo_bobinador }}{% endif %}
+      {% if f.tension_bob_gra %}| Tensión: {{ f.tension_bob_gra }}{% endif %}
+    </p>
     <div style="display: flex; gap: 8px;">
       <button type="button" 
               style="width: auto; padding: 6px 12px; margin: 0; background: #28a745;" 
@@ -78,6 +90,7 @@
               data-alim="{{ f.alimentacion }}"
               data-trans="{{ f.transmision }}"
               data-bob="{{ f.bob }}"
+              data-tipo-bob="{{ f.tipo_bobinador }}"
               data-tension="{{ f.tension_bob_gra }}"
               onclick="cargarEdicion(this)">
         Editar
@@ -104,6 +117,7 @@ function cargarEdicion(btn) {
   document.getElementById('form-alim').value = btn.getAttribute('data-alim') || '';
   document.getElementById('form-trans').value = btn.getAttribute('data-trans') || '';
   document.getElementById('form-bob').value = btn.getAttribute('data-bob') || '';
+  document.getElementById('form-tipo-bob').value = btn.getAttribute('data-tipo-bob') || '';
   document.getElementById('form-tension').value = btn.getAttribute('data-tension') || '';
   document.getElementById('btn-save').innerText = 'Actualizar Ficha';
   window.scrollTo({top: 0, behavior: 'smooth'});
@@ -122,9 +136,11 @@ function limpiarFormulario() {
   document.getElementById('form-alim').value = '';
   document.getElementById('form-trans').value = '';
   document.getElementById('form-bob').value = '';
+  document.getElementById('form-tipo-bob').value = '';
   document.getElementById('form-tension').value = '';
   document.getElementById('btn-save').innerText = 'Guardar Ficha';
 }
 </script>
 {% endblock %}
+
 
