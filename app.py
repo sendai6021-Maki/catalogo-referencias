@@ -28,6 +28,7 @@ class Ficha(db.Model):
     aro = db.Column(db.String(50), default="")
     freno = db.Column(db.String(50), default="")
     batan = db.Column(db.String(50), default="")
+    tex = db.Column(db.String(100), default="")  # <-- Nuevo campo
     rpm = db.Column(db.String(50), default="")
     pasadas = db.Column(db.String(100), default="")
     alimentacion = db.Column(db.String(100), default="")
@@ -43,6 +44,7 @@ class Ficha(db.Model):
             "aro": self.aro or "",
             "freno": self.freno or "",
             "batan": self.batan or "",
+            "tex": self.tex or "",
             "rpm": self.rpm or "",
             "pasadas": self.pasadas or "",
             "alimentacion": self.alimentacion or "",
@@ -101,6 +103,7 @@ def admin():
                 ficha.aro = request.form.get("aro", "")
                 ficha.freno = request.form.get("freno", "")
                 ficha.batan = request.form.get("batan", "")
+                ficha.tex = request.form.get("tex", "")
                 ficha.rpm = request.form.get("rpm", "")
                 ficha.pasadas = request.form.get("pasadas", "")
                 ficha.alimentacion = request.form.get("alimentacion", "")
@@ -114,6 +117,7 @@ def admin():
                 aro=request.form.get("aro", ""),
                 freno=request.form.get("freno", ""),
                 batan=request.form.get("batan", ""),
+                tex=request.form.get("tex", ""),
                 rpm=request.form.get("rpm", ""),
                 pasadas=request.form.get("pasadas", ""),
                 alimentacion=request.form.get("alimentacion", ""),
@@ -127,10 +131,8 @@ def admin():
         db.session.commit()
         return redirect(url_for("admin"))
 
-    # Pasamos las fichas directamente como objetos del modelo
     fichas = Ficha.query.order_by(Ficha.referencia.asc(), Ficha.id.desc()).all()
     return render_template("admin.html", fichas=fichas)
-
 
 @app.route("/admin/eliminar/<int:id>", methods=["POST"])
 @login_required
@@ -143,6 +145,7 @@ def eliminar(id):
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)
+
 
 
                 

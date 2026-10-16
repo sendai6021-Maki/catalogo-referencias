@@ -1,33 +1,71 @@
 {% extends "base.html" %}
 {% block content %}
 <h2>Consulta de Referencias</h2>
-<form method="GET" action="{{ url_for('index') }}">
-  <input type="text" name="q" placeholder="Ej: 128R58" value="{{ query }}" required autofocus>
+
+<form method="GET" action="/">
+  <input type="text" name="q" value="{{ query }}" placeholder="Ej: 128R58" autofocus>
   <button type="submit">Buscar Referencia</button>
 </form>
 
 {% if query %}
-  <h3 style="margin-top: 25px;">Resultados para: {{ query }}</h3>
   {% if resultados %}
-    <p style="color: #666;">Se encontraron {{ resultados|length }} ficha(s) técnica(s) para esta referencia:</p>
-    {% for r in resultados %}
+    <h3>Resultados para "{{ query }}":</h3>
+    {% for f in resultados %}
       <div class="card">
-        <div class="card-title">Referencia: {{ r['referencia'] }} {% if r['nota_variante'] %}<span style="font-size: 0.85rem; color: #666; font-weight: normal;">({{ r['nota_variante'] }})</span>{% endif %}</div>
-        <div class="grid">
-          <div class="data-item"><span class="data-label">Aro:</span> {{ r['aro'] }}</div>
-          <div class="data-item"><span class="data-label">Freno:</span> {{ r['freno'] }}</div>
-          <div class="data-item"><span class="data-label">Batán:</span> {{ r['batan'] }}</div>
-          <div class="data-item"><span class="data-label">RPM:</span> {{ r['rpm'] }}</div>
-          <div class="data-item"><span class="data-label">Pasadas:</span> {{ r['pasadas'] }}</div>
-          <div class="data-item"><span class="data-label">Alimentación:</span> {{ r['alimentacion'] }}</div>
-          <div class="data-item"><span class="data-label">Transmisión:</span> {{ r['transmision'] }}</div>
-          <div class="data-item"><span class="data-label">Bobina (Bob):</span> {{ r['bob'] }}</div>
-          <div class="data-item"><span class="data-label">Tensión Bob gra:</span> {{ r['tension_bob_gra'] }}</div>
-        </div>
+        <h3 style="margin-top: 0; color: #007bff;">
+          {{ f.referencia }}
+          {% if f.nota_variante %}
+            <small style="color: #6c757d; font-size: 0.9rem;">({{ f.nota_variante }})</small>
+          {% endif %}
+        </h3>
+        
+        <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+          <tr>
+            <td style="padding: 6px; font-weight: bold; border-bottom: 1px solid #eee; width: 40%;">Aro:</td>
+            <td style="padding: 6px; border-bottom: 1px solid #eee;">{{ f.aro or '-' }}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px; font-weight: bold; border-bottom: 1px solid #eee;">Freno:</td>
+            <td style="padding: 6px; border-bottom: 1px solid #eee;">{{ f.freno or '-' }}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px; font-weight: bold; border-bottom: 1px solid #eee;">Batán:</td>
+            <td style="padding: 6px; border-bottom: 1px solid #eee;">{{ f.batan or '-' }}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px; font-weight: bold; border-bottom: 1px solid #eee; color: #0056b3;">Tex:</td>
+            <td style="padding: 6px; border-bottom: 1px solid #eee; font-weight: 500;">{{ f.tex or '-' }}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px; font-weight: bold; border-bottom: 1px solid #eee;">RPM:</td>
+            <td style="padding: 6px; border-bottom: 1px solid #eee;">{{ f.rpm or '-' }}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px; font-weight: bold; border-bottom: 1px solid #eee;">Pasadas:</td>
+            <td style="padding: 6px; border-bottom: 1px solid #eee;">{{ f.pasadas or '-' }}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px; font-weight: bold; border-bottom: 1px solid #eee;">Alimentación:</td>
+            <td style="padding: 6px; border-bottom: 1px solid #eee;">{{ f.alimentacion or '-' }}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px; font-weight: bold; border-bottom: 1px solid #eee;">Transmisión:</td>
+            <td style="padding: 6px; border-bottom: 1px solid #eee;">{{ f.transmision or '-' }}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px; font-weight: bold; border-bottom: 1px solid #eee;">Bob:</td>
+            <td style="padding: 6px; border-bottom: 1px solid #eee;">{{ f.bob or '-' }}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px; font-weight: bold;">Tensión Bob gra:</td>
+            <td style="padding: 6px;">{{ f.tension_bob_gra or '-' }}</td>
+          </tr>
+        </table>
       </div>
     {% endfor %}
   {% else %}
-    <p style="color: #888;">No se encontraron datos registrados para la referencia "{{ query }}".</p>
+    <p style="margin-top: 20px; color: #777;">No se encontraron resultados para "<strong>{{ query }}</strong>".</p>
   {% endif %}
 {% endif %}
 {% endblock %}
+

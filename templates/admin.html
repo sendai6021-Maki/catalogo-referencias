@@ -26,6 +26,10 @@
       <input type="text" name="batan" id="form-batan" placeholder="4 mm">
     </div>
     <div>
+      <label>Tex</label>
+      <input type="text" name="tex" id="form-tex" placeholder="91 urd - 91 tr">
+    </div>
+    <div>
       <label>RPM</label>
       <input type="text" name="rpm" id="form-rpm" placeholder="900">
     </div>
@@ -58,7 +62,7 @@
 {% for f in fichas %}
   <div class="card">
     <strong>{{ f.referencia }}</strong> {% if f.nota_variante %}- <em>{{ f.nota_variante }}</em>{% endif %}
-    <p style="font-size: 0.85rem; margin: 5px 0;">RPM: {{ f.rpm }} | Aro: {{ f.aro }} | Pasadas: {{ f.pasadas }}</p>
+    <p style="font-size: 0.85rem; margin: 5px 0;">RPM: {{ f.rpm }} | Batán: {{ f.batan }} | Tex: {{ f.tex }} | Aro: {{ f.aro }}</p>
     <div style="display: flex; gap: 8px;">
       <button type="button" 
               style="width: auto; padding: 6px 12px; margin: 0; background: #28a745;" 
@@ -68,6 +72,7 @@
               data-aro="{{ f.aro }}"
               data-freno="{{ f.freno }}"
               data-batan="{{ f.batan }}"
+              data-tex="{{ f.tex }}"
               data-rpm="{{ f.rpm }}"
               data-pasadas="{{ f.pasadas }}"
               data-alim="{{ f.alimentacion }}"
@@ -93,6 +98,7 @@ function cargarEdicion(btn) {
   document.getElementById('form-aro').value = btn.getAttribute('data-aro') || '';
   document.getElementById('form-freno').value = btn.getAttribute('data-freno') || '';
   document.getElementById('form-batan').value = btn.getAttribute('data-batan') || '';
+  document.getElementById('form-tex').value = btn.getAttribute('data-tex') || '';
   document.getElementById('form-rpm').value = btn.getAttribute('data-rpm') || '';
   document.getElementById('form-pasadas').value = btn.getAttribute('data-pasadas') || '';
   document.getElementById('form-alim').value = btn.getAttribute('data-alim') || '';
@@ -110,6 +116,7 @@ function limpiarFormulario() {
   document.getElementById('form-aro').value = '';
   document.getElementById('form-freno').value = '';
   document.getElementById('form-batan').value = '';
+  document.getElementById('form-tex').value = '';
   document.getElementById('form-rpm').value = '';
   document.getElementById('form-pasadas').value = '';
   document.getElementById('form-alim').value = '';
@@ -120,3 +127,4 @@ function limpiarFormulario() {
 }
 </script>
 {% endblock %}
+
