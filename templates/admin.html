@@ -1,0 +1,105 @@
+{{% extends "base.html" %}
+{% block content %}
+<h2>Panel de Administración</h2>
+<p>Agrega o modifica fichas técnicas de referencias:</p>
+
+<form method="POST" style="background: #fdfdfd; padding: 15px; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 30px;">
+  <input type="hidden" name="id" id="form-id">
+  
+  <label>Referencia (Obligatorio)</label>
+  <input type="text" name="referencia" id="form-ref" placeholder="Ej: 128R58" required>
+
+  <label>Etiqueta / Variante (Opcional, ej: Máquina 04 o Con Trama Reforzada)</label>
+  <input type="text" name="nota_variante" id="form-nota" placeholder="Diferenciador si la ref se repite">
+
+  <div class="grid">
+    <div>
+      <label>Aro</label>
+      <input type="text" name="aro" id="form-aro" placeholder="405">
+    </div>
+    <div>
+      <label>Freno</label>
+      <input type="text" name="freno" id="form-freno" placeholder="2">
+    </div>
+    <div>
+      <label>Batán</label>
+      <input type="text" name="batan" id="form-batan" placeholder="4 mm">
+    </div>
+    <div>
+      <label>RPM</label>
+      <input type="text" name="rpm" id="form-rpm" placeholder="900">
+    </div>
+    <div>
+      <label>Pasadas</label>
+      <input type="text" name="pasadas" id="form-pasadas" placeholder="32 urd - 32 tr">
+    </div>
+    <div>
+      <label>Alimentación</label>
+      <input type="text" name="alimentacion" id="form-alim" placeholder="31 - 206">
+    </div>
+    <div>
+      <label>Transmisión</label>
+      <input type="text" name="transmision" id="form-trans" placeholder="80.5 - 2.24 - 180.32">
+    </div>
+    <div>
+      <label>Bob</label>
+      <input type="text" name="bob" id="form-bob" placeholder="63.0 - 1.7647 - 111.18">
+    </div>
+  </div>
+
+  <label>Tensión Bob gra</label>
+  <input type="text" name="tension_bob_gra" id="form-tension" placeholder="35/20">
+
+  <button type="submit" id="btn-save">Guardar Ficha</button>
+  <button type="button" onclick="limpiarFormulario()" style="background: #6c757d;">Limpiar / Nueva</button>
+</form>
+
+<h3>Fichas Registradas</h3>
+{% for f in fichas %}
+  <div class="card">
+    <strong>{{ f['referencia'] }}</strong> {% if f['nota_variante'] %}- <em>{{ f['nota_variante'] }}</em>{% endif %}
+    <p style="font-size: 0.85rem; margin: 5px 0;">RPM: {{ f['rpm'] }} | Aro: {{ f['aro'] }} | Pasadas: {{ f['pasadas'] }}</p>
+    <div style="display: flex; gap: 8px;">
+      <button style="width: auto; padding: 6px 12px; margin: 0; background: #28a745;" onclick='editarFicha({{ f|tojson }})'>Editar</button>
+      <form method="POST" action="{{ url_for('eliminar', id=f['id']) }}" style="display:inline; margin:0;" onsubmit="return confirm('¿Seguro de eliminar?');">
+        <button type="submit" class="btn-danger" style="width: auto; padding: 6px 12px; margin: 0;">Eliminar</button>
+      </form>
+    </div>
+  </div>
+{% endfor %}
+
+<script>
+function editarFicha(f) {
+  document.getElementById('form-id').value = f.id;
+  document.getElementById('form-ref').value = f.referencia || '';
+  document.getElementById('form-nota').value = f.nota_variante || '';
+  document.getElementById('form-aro').value = f.aro || '';
+  document.getElementById('form-freno').value = f.freno || '';
+  document.getElementById('form-batan').value = f.batan || '';
+  document.getElementById('form-rpm').value = f.rpm || '';
+  document.getElementById('form-pasadas').value = f.pasadas || '';
+  document.getElementById('form-alim').value = f.alimentacion || '';
+  document.getElementById('form-trans').value = f.transmision || '';
+  document.getElementById('form-bob').value = f.bob || '';
+  document.getElementById('form-tension').value = f.tension_bob_gra || '';
+  document.getElementById('btn-save').innerText = 'Actualizar Ficha';
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function limpiarFormulario() {
+  document.getElementById('form-id').value = '';
+  document.getElementById('form-ref').value = '';
+  document.getElementById('form-nota').value = '';
+  document.getElementById('form-aro').value = '';
+  document.getElementById('form-freno').value = '';
+  document.getElementById('form-batan').value = '';
+  document.getElementById('form-rpm').value = '';
+  document.getElementById('form-pasadas').value = '';
+  document.getElementById('form-alim').value = '';
+  document.getElementById('form-trans').value = '';
+  document.getElementById('form-bob').value = '';
+  document.getElementById('form-tension').value = '';
+  document.getElementById('btn-save').innerText = 'Guardar Ficha';
+}
+</script>
+{% endblock %}

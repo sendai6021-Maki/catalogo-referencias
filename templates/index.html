@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Consulta de Referencias</h2>
+<form method="GET" action="{{ url_for('index') }}">
+  <input type="text" name="q" placeholder="Ej: 128R58" value="{{ query }}" required autofocus>
+  <button type="submit">Buscar Referencia</button>
+</form>
+
+{% if query %}
+  <h3 style="margin-top: 25px;">Resultados para: {{ query }}</h3>
+  {% if resultados %}
+    <p style="color: #666;">Se encontraron {{ resultados|length }} ficha(s) técnica(s) para esta referencia:</p>
+    {% for r in resultados %}
+      <div class="card">
+        <div class="card-title">Referencia: {{ r['referencia'] }} {% if r['nota_variante'] %}<span style="font-size: 0.85rem; color: #666; font-weight: normal;">({{ r['nota_variante'] }})</span>{% endif %}</div>
+        <div class="grid">
+          <div class="data-item"><span class="data-label">Aro:</span> {{ r['aro'] }}</div>
+          <div class="data-item"><span class="data-label">Freno:</span> {{ r['freno'] }}</div>
+          <div class="data-item"><span class="data-label">Batán:</span> {{ r['batan'] }}</div>
+          <div class="data-item"><span class="data-label">RPM:</span> {{ r['rpm'] }}</div>
+          <div class="data-item"><span class="data-label">Pasadas:</span> {{ r['pasadas'] }}</div>
+          <div class="data-item"><span class="data-label">Alimentación:</span> {{ r['alimentacion'] }}</div>
+          <div class="data-item"><span class="data-label">Transmisión:</span> {{ r['transmision'] }}</div>
+          <div class="data-item"><span class="data-label">Bobina (Bob):</span> {{ r['bob'] }}</div>
+          <div class="data-item"><span class="data-label">Tensión Bob gra:</span> {{ r['tension_bob_gra'] }}</div>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p style="color: #888;">No se encontraron datos registrados para la referencia "{{ query }}".</p>
+  {% endif %}
+{% endif %}
+{% endblock %}
