@@ -10,7 +10,6 @@ app.secret_key = os.environ.get("SECRET_KEY", "Cats")
 ADMIN_USER = os.environ.get("ADMIN_USER", "Sendai6021")
 ADMIN_PASS_HASH = generate_password_hash(os.environ.get("ADMIN_PASS", "Haru&Maki1302"))
 
-# Manejo de la URL para compatibilidad total con Render y psycopg3
 db_url = os.environ.get("DATABASE_URL", "sqlite:///referencias.db")
 if db_url.startswith("postgres://"):
     db_url = db_url.replace("postgres://", "postgresql+psycopg://", 1)
@@ -26,21 +25,21 @@ class Ficha(db.Model):
     __tablename__ = "fichas"
     id = db.Column(db.Integer, primary_key=True)
     referencia = db.Column(db.String(80), nullable=False, index=True)
-    aro = db.Column(db.String(50))
-    freno = db.Column(db.String(50))
-    batan = db.Column(db.String(50))
-    rpm = db.Column(db.String(50))
-    pasadas = db.Column(db.String(100))
-    alimentacion = db.Column(db.String(100))
-    transmision = db.Column(db.String(100))
-    bob = db.Column(db.String(100))
-    tension_bob_gra = db.Column(db.String(50))
-    nota_variante = db.Column(db.String(150))
+    aro = db.Column(db.String(50), default="")
+    freno = db.Column(db.String(50), default="")
+    batan = db.Column(db.String(50), default="")
+    rpm = db.Column(db.String(50), default="")
+    pasadas = db.Column(db.String(100), default="")
+    alimentacion = db.Column(db.String(100), default="")
+    transmision = db.Column(db.String(100), default="")
+    bob = db.Column(db.String(100), default="")
+    tension_bob_gra = db.Column(db.String(50), default="")
+    nota_variante = db.Column(db.String(150), default="")
 
     def to_dict(self):
         return {
             "id": self.id,
-            "referencia": self.referencia,
+            "referencia": self.referencia or "",
             "aro": self.aro or "",
             "freno": self.freno or "",
             "batan": self.batan or "",
@@ -75,8 +74,8 @@ def index():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "").strip()
         if username == ADMIN_USER and check_password_hash(ADMIN_PASS_HASH, password):
             session["logged_in"] = True
             return redirect(url_for("admin"))
@@ -96,32 +95,32 @@ def admin():
         referencia = request.form.get("referencia", "").strip().upper()
         
         if ficha_id:
-            ficha = Ficha.query.get(ficha_id)
+            ficha = db.session.get(Ficha, int(ficha_id))
             if ficha:
                 ficha.referencia = referencia
-                ficha.aro = request.form.get("aro")
-                ficha.freno = request.form.get("freno")
-                ficha.batan = request.form.get("batan")
-                ficha.rpm = request.form.get("rpm")
-                ficha.pasadas = request.form.get("pasadas")
-                ficha.alimentacion = request.form.get("alimentacion")
-                ficha.transmision = request.form.get("transmision")
-                ficha.bob = request.form.get("bob")
-                ficha.tension_bob_gra = request.form.get("tension_bob_gra")
-                ficha.nota_variante = request.form.get("nota_variante")
+                ficha.aro = request.form.get("aro", "")
+                ficha.freno = request.form.get("freno", "")
+                ficha.batan = request.form.get("batan", "")
+                ficha.rpm = request.form.get("rpm", "")
+                ficha.pasadas = request.form.get("pasadas", "")
+                ficha.alimentacion = request.form.get("alimentacion", "")
+                ficha.transmision = request.form.get("transmision", "")
+                ficha.bob = request.form.get("bob", "")
+                ficha.tension_bob_gra = request.form.get("tension_bob_gra", "")
+                ficha.nota_variante = request.form.get("nota_variante", "")
         else:
             ficha = Ficha(
                 referencia=referencia,
-                aro=request.form.get("aro"),
-                freno=request.form.get("freno"),
-                batan=request.form.get("batan"),
-                rpm=request.form.get("rpm"),
-                pasadas=request.form.get("pasadas"),
-                alimentacion=request.form.get("alimentacion"),
-                transmision=request.form.get("transmision"),
-                bob=request.form.get("bob"),
-                tension_bob_gra=request.form.get("tension_bob_gra"),
-                nota_variante=request.form.get("nota_variante")
+                aro=request.form.get("aro", ""),
+                freno=request.form.get("freno", ""),
+                batan=request.form.get("batan", ""),
+                rpm=request.form.get("rpm", ""),
+                pasadas=request.form.get("pasadas", ""),
+                alimentacion=request.form.get("alimentacion", ""),
+                transmision=request.form.get("transmision", ""),
+                bob=request.form.get("bob", ""),
+                tension_bob_gra=request.form.get("tension_bob_gra", ""),
+                nota_variante=request.form.get("nota_variante", "")
             )
             db.session.add(ficha)
         
@@ -135,7 +134,7 @@ def admin():
 @app.route("/admin/eliminar/<int:id>", methods=["POST"])
 @login_required
 def eliminar(id):
-    ficha = Ficha.query.get(id)
+    ficha = db.session.get(Ficha, id)
     if ficha:
         db.session.delete(ficha)
         db.session.commit()
@@ -143,3 +142,6 @@ def eliminar(id):
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)
+
+
+                
