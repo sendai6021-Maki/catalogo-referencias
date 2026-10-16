@@ -5,14 +5,17 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", "clave-secreta-temporal-12345")
+app.secret_key = os.environ.get("SECRET_KEY", "Cats")
 
-ADMIN_USER = os.environ.get("ADMIN_USER", "admin")
-ADMIN_PASS_HASH = generate_password_hash(os.environ.get("ADMIN_PASS", "admin123"))
+ADMIN_USER = os.environ.get("ADMIN_USER", "Sendai6021")
+ADMIN_PASS_HASH = generate_password_hash(os.environ.get("ADMIN_PASS", "Haru&Maki1302"))
 
+# Manejo de la URL para compatibilidad total con Render y psycopg3
 db_url = os.environ.get("DATABASE_URL", "sqlite:///referencias.db")
 if db_url.startswith("postgres://"):
-    db_url = db_url.replace("postgres://", "postgresql://", 1)
+    db_url = db_url.replace("postgres://", "postgresql+psycopg://", 1)
+elif db_url.startswith("postgresql://"):
+    db_url = db_url.replace("postgresql://", "postgresql+psycopg://", 1)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = db_url
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
