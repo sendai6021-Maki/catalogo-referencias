@@ -1,5 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
+<style>
+  .spec-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-size: 0.95rem;
+  }
+  .spec-table tr {
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .spec-table tr:nth-child(even) {
+    background-color: #fbfbfb;
+  }
+  .spec-table tr:hover {
+    background-color: #f5f8ff;
+  }
+  .spec-table td {
+    padding: 9px 12px;
+  }
+  .spec-label {
+    font-weight: 600;
+    color: #495057;
+    width: 42%;
+  }
+  .spec-value {
+    color: #212529;
+    font-weight: 400;
+  }
+</style>
+
 <h2>Consulta de Referencias</h2>
 
 <form method="GET" action="/">
@@ -11,60 +41,60 @@
   {% if resultados %}
     <h3>Resultados para "{{ query }}":</h3>
     {% for f in resultados %}
-      <div class="card">
-        <h3 style="margin-top: 0; color: #007bff;">
-          {{ f.referencia }}
+      <div class="card" style="margin-bottom: 25px; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
+        <h3 style="margin-top: 0; color: #007bff; display: flex; align-items: baseline; gap: 8px;">
+          <span>{{ f.referencia }}</span>
           {% if f.nota_variante %}
-            <small style="color: #6c757d; font-size: 0.9rem;">({{ f.nota_variante }})</small>
+            <span style="color: #6c757d; font-size: 0.9rem; font-weight: normal;">({{ f.nota_variante }})</span>
           {% endif %}
         </h3>
         
-        <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+        <table class="spec-table">
           <tr>
-            <td style="padding: 6px; font-weight: bold; border-bottom: 1px solid #eee; width: 40%;">Aro:</td>
-            <td style="padding: 6px; border-bottom: 1px solid #eee;">{{ f.aro or '-' }}</td>
+            <td class="spec-label">Aro:</td>
+            <td class="spec-value">{{ f.aro or '-' }}</td>
           </tr>
           <tr>
-            <td style="padding: 6px; font-weight: bold; border-bottom: 1px solid #eee;">Freno:</td>
-            <td style="padding: 6px; border-bottom: 1px solid #eee;">{{ f.freno or '-' }}</td>
+            <td class="spec-label">Freno:</td>
+            <td class="spec-value">{{ f.freno or '-' }}</td>
           </tr>
           <tr>
-            <td style="padding: 6px; font-weight: bold; border-bottom: 1px solid #eee;">Batán:</td>
-            <td style="padding: 6px; border-bottom: 1px solid #eee;">{{ f.batan or '-' }}</td>
+            <td class="spec-label">Batán:</td>
+            <td class="spec-value">{{ f.batan or '-' }}</td>
           </tr>
           <tr>
-            <td style="padding: 6px; font-weight: bold; border-bottom: 1px solid #eee; color: #0056b3;">Tex:</td>
-            <td style="padding: 6px; border-bottom: 1px solid #eee; font-weight: 500;">{{ f.tex or '-' }}</td>
+            <td class="spec-label">Tex:</td>
+            <td class="spec-value">{{ f.tex or '-' }}</td>
           </tr>
           <tr>
-            <td style="padding: 6px; font-weight: bold; border-bottom: 1px solid #eee;">RPM:</td>
-            <td style="padding: 6px; border-bottom: 1px solid #eee;">{{ f.rpm or '-' }}</td>
+            <td class="spec-label">RPM:</td>
+            <td class="spec-value">{{ f.rpm or '-' }}</td>
           </tr>
           <tr>
-            <td style="padding: 6px; font-weight: bold; border-bottom: 1px solid #eee;">Pasadas:</td>
-            <td style="padding: 6px; border-bottom: 1px solid #eee;">{{ f.pasadas or '-' }}</td>
+            <td class="spec-label">Pasadas:</td>
+            <td class="spec-value">{{ f.pasadas or '-' }}</td>
           </tr>
           <tr>
-            <td style="padding: 6px; font-weight: bold; border-bottom: 1px solid #eee;">Alimentación:</td>
-            <td style="padding: 6px; border-bottom: 1px solid #eee;">{{ f.alimentacion or '-' }}</td>
+            <td class="spec-label">Alimentación:</td>
+            <td class="spec-value">{{ f.alimentacion or '-' }}</td>
           </tr>
           <tr>
-            <td style="padding: 6px; font-weight: bold; border-bottom: 1px solid #eee;">Transmisión:</td>
-            <td style="padding: 6px; border-bottom: 1px solid #eee;">{{ f.transmision or '-' }}</td>
+            <td class="spec-label">Transmisión:</td>
+            <td class="spec-value">{{ f.transmision or '-' }}</td>
           </tr>
           <tr>
-            <td style="padding: 6px; font-weight: bold; border-bottom: 1px solid #eee;">Bob:</td>
-            <td style="padding: 6px; border-bottom: 1px solid #eee;">{{ f.bob or '-' }}</td>
+            <td class="spec-label">Bob:</td>
+            <td class="spec-value">{{ f.bob or '-' }}</td>
           </tr>
           {% if f.tipo_bobinador %}
           <tr>
-            <td style="padding: 6px; font-weight: bold; border-bottom: 1px solid #eee;">Bobinador:</td>
-            <td style="padding: 6px; border-bottom: 1px solid #eee;">{{ f.tipo_bobinador }}</td>
+            <td class="spec-label">Bobinador:</td>
+            <td class="spec-value">{{ f.tipo_bobinador }}</td>
           </tr>
           {% endif %}
           <tr>
-            <td style="padding: 6px; font-weight: bold;">Tensión:</td>
-            <td style="padding: 6px;">{{ f.tension_bob_gra or '-' }}</td>
+            <td class="spec-label">Tensión:</td>
+            <td class="spec-value">{{ f.tension_bob_gra or '-' }}</td>
           </tr>
         </table>
       </div>
@@ -74,5 +104,6 @@
   {% endif %}
 {% endif %}
 {% endblock %}
+
 
 
