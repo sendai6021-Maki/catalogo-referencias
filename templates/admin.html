@@ -1,4 +1,4 @@
-{{% extends "base.html" %}
+{{% ext{% extends "base.html" %}
 {% block content %}
 <h2>Panel de Administración</h2>
 <p>Agrega o modifica fichas técnicas de referencias:</p>
@@ -9,7 +9,7 @@
   <label>Referencia (Obligatorio)</label>
   <input type="text" name="referencia" id="form-ref" placeholder="Ej: 128R58" required>
 
-  <label>Etiqueta / Variante (Opcional, ej: Máquina 04 o Con Trama Reforzada)</label>
+  <label>Etiqueta / Variante (Opcional, ej: Con Trama Reforzada)</label>
   <input type="text" name="nota_variante" id="form-nota" placeholder="Diferenciador si la ref se repite">
 
   <div class="grid">
@@ -57,11 +57,28 @@
 <h3>Fichas Registradas</h3>
 {% for f in fichas %}
   <div class="card">
-    <strong>{{ f['referencia'] }}</strong> {% if f['nota_variante'] %}- <em>{{ f['nota_variante'] }}</em>{% endif %}
-    <p style="font-size: 0.85rem; margin: 5px 0;">RPM: {{ f['rpm'] }} | Aro: {{ f['aro'] }} | Pasadas: {{ f['pasadas'] }}</p>
+    <strong>{{ f.referencia }}</strong> {% if f.nota_variante %}- <em>{{ f.nota_variante }}</em>{% endif %}
+    <p style="font-size: 0.85rem; margin: 5px 0;">RPM: {{ f.rpm }} | Aro: {{ f.aro }} | Pasadas: {{ f.pasadas }}</p>
     <div style="display: flex; gap: 8px;">
-      <button style="width: auto; padding: 6px 12px; margin: 0; background: #28a745;" onclick='editarFicha({{ f|tojson }})'>Editar</button>
-      <form method="POST" action="{{ url_for('eliminar', id=f['id']) }}" style="display:inline; margin:0;" onsubmit="return confirm('¿Seguro de eliminar?');">
+      <button type="button" 
+              style="width: auto; padding: 6px 12px; margin: 0; background: #28a745;" 
+              data-id="{{ f.id }}"
+              data-referencia="{{ f.referencia }}"
+              data-nota="{{ f.nota_variante }}"
+              data-aro="{{ f.aro }}"
+              data-freno="{{ f.freno }}"
+              data-batan="{{ f.batan }}"
+              data-rpm="{{ f.rpm }}"
+              data-pasadas="{{ f.pasadas }}"
+              data-alim="{{ f.alimentacion }}"
+              data-trans="{{ f.transmision }}"
+              data-bob="{{ f.bob }}"
+              data-tension="{{ f.tension_bob_gra }}"
+              onclick="cargarEdicion(this)">
+        Editar
+      </button>
+
+      <form method="POST" action="{{ url_for('eliminar', id=f.id) }}" style="display:inline; margin:0;" onsubmit="return confirm('¿Seguro de eliminar?');">
         <button type="submit" class="btn-danger" style="width: auto; padding: 6px 12px; margin: 0;">Eliminar</button>
       </form>
     </div>
@@ -69,19 +86,19 @@
 {% endfor %}
 
 <script>
-function editarFicha(f) {
-  document.getElementById('form-id').value = f.id;
-  document.getElementById('form-ref').value = f.referencia || '';
-  document.getElementById('form-nota').value = f.nota_variante || '';
-  document.getElementById('form-aro').value = f.aro || '';
-  document.getElementById('form-freno').value = f.freno || '';
-  document.getElementById('form-batan').value = f.batan || '';
-  document.getElementById('form-rpm').value = f.rpm || '';
-  document.getElementById('form-pasadas').value = f.pasadas || '';
-  document.getElementById('form-alim').value = f.alimentacion || '';
-  document.getElementById('form-trans').value = f.transmision || '';
-  document.getElementById('form-bob').value = f.bob || '';
-  document.getElementById('form-tension').value = f.tension_bob_gra || '';
+function cargarEdicion(btn) {
+  document.getElementById('form-id').value = btn.getAttribute('data-id');
+  document.getElementById('form-ref').value = btn.getAttribute('data-referencia') || '';
+  document.getElementById('form-nota').value = btn.getAttribute('data-nota') || '';
+  document.getElementById('form-aro').value = btn.getAttribute('data-aro') || '';
+  document.getElementById('form-freno').value = btn.getAttribute('data-freno') || '';
+  document.getElementById('form-batan').value = btn.getAttribute('data-batan') || '';
+  document.getElementById('form-rpm').value = btn.getAttribute('data-rpm') || '';
+  document.getElementById('form-pasadas').value = btn.getAttribute('data-pasadas') || '';
+  document.getElementById('form-alim').value = btn.getAttribute('data-alim') || '';
+  document.getElementById('form-trans').value = btn.getAttribute('data-trans') || '';
+  document.getElementById('form-bob').value = btn.getAttribute('data-bob') || '';
+  document.getElementById('form-tension').value = btn.getAttribute('data-tension') || '';
   document.getElementById('btn-save').innerText = 'Actualizar Ficha';
   window.scrollTo({top: 0, behavior: 'smooth'});
 }
@@ -103,3 +120,4 @@ function limpiarFormulario() {
 }
 </script>
 {% endblock %}
+
