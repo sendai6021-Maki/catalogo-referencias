@@ -2,6 +2,7 @@ import os
 from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import text
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
@@ -10,6 +11,7 @@ app.secret_key = os.environ.get("SECRET_KEY", "Cats")
 ADMIN_USER = os.environ.get("ADMIN_USER", "Sendai6021")
 ADMIN_PASS_HASH = generate_password_hash(os.environ.get("ADMIN_PASS", "Haru&Maki1302"))
 
+# Manejo de compatibilidad de URL para PostgreSQL en Render
 db_url = os.environ.get("DATABASE_URL", "sqlite:///referencias.db")
 if db_url.startswith("postgres://"):
     db_url = db_url.replace("postgres://", "postgresql+psycopg://", 1)
@@ -28,7 +30,7 @@ class Ficha(db.Model):
     aro = db.Column(db.String(50), default="")
     freno = db.Column(db.String(50), default="")
     batan = db.Column(db.String(50), default="")
-    tex = db.Column(db.String(100), default="")  # <-- Nuevo campo
+    tex = db.Column(db.String(100), default="")
     rpm = db.Column(db.String(50), default="")
     pasadas = db.Column(db.String(100), default="")
     alimentacion = db.Column(db.String(100), default="")
@@ -56,6 +58,13 @@ class Ficha(db.Model):
 
 with app.app_context():
     db.create_all()
+    # Migración automática si la tabla ya existía sin la columna 'tex'
+    try:
+        with db.engine.connect() as conn:
+            conn.execute(text("ALTER TABLE fichas ADD COLUMN IF NOT EXISTS tex VARCHAR(100);"))
+            conn.commit()
+    except Exception as e:
+        print("Aviso al verificar columnas:", e)
 
 def login_required(f):
     @wraps(f)
@@ -145,6 +154,7 @@ def eliminar(id):
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)
+
 
 
 
