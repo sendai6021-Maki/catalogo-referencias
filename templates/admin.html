@@ -1,4 +1,4 @@
-{{% ext{% extends "base.html" %}
+{% extends "base.html" %}
 {% block content %}
 <h2>Panel de Administración</h2>
 <p>Agrega o modifica fichas técnicas de referencias:</p>
@@ -87,7 +87,7 @@
 
 <script>
 function cargarEdicion(btn) {
-  document.getElementById('form-id').value = btn.getAttribute('data-id');
+  document.getElementById('form-id').value = btn.getAttribute('data-id') || '';
   document.getElementById('form-ref').value = btn.getAttribute('data-referencia') || '';
   document.getElementById('form-nota').value = btn.getAttribute('data-nota') || '';
   document.getElementById('form-aro').value = btn.getAttribute('data-aro') || '';
@@ -120,4 +120,3 @@ function limpiarFormulario() {
 }
 </script>
 {% endblock %}
-

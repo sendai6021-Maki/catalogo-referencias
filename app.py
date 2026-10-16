@@ -94,7 +94,7 @@ def admin():
         ficha_id = request.form.get("id")
         referencia = request.form.get("referencia", "").strip().upper()
         
-        if ficha_id:
+        if ficha_id and ficha_id.isdigit():
             ficha = db.session.get(Ficha, int(ficha_id))
             if ficha:
                 ficha.referencia = referencia
@@ -127,9 +127,10 @@ def admin():
         db.session.commit()
         return redirect(url_for("admin"))
 
+    # Pasamos las fichas directamente como objetos del modelo
     fichas = Ficha.query.order_by(Ficha.referencia.asc(), Ficha.id.desc()).all()
-    fichas_dict = [f.to_dict() for f in fichas]
-    return render_template("admin.html", fichas=fichas_dict)
+    return render_template("admin.html", fichas=fichas)
+
 
 @app.route("/admin/eliminar/<int:id>", methods=["POST"])
 @login_required
